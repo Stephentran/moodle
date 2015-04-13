@@ -1,0 +1,15 @@
+[11-Apr-2015 16:18:32 UTC] Default exception handler: error/facebook_failure Debug: 
+Error code: facebook_failure
+$a contents: 
+* line 11 of /auth/googleoauth2/facebook_redirect.php: moodle_exception thrown
+
+[11-Apr-2015 16:34:54 UTC] Default exception handler: error/facebook_failure Debug: 
+Error code: facebook_failure
+$a contents: 
+* line 11 of /auth/googleoauth2/facebook_redirect.php: moodle_exception thrown
+
+[13-Apr-2015 02:36:20 UTC] Default exception handler: error/facebook_failure Debug: 
+Error code: facebook_failure
+$a contents: 
+* line 11 of /auth/googleoauth2/facebook_redirect.php: moodle_exception thrown
+
