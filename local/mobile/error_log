@@ -1,0 +1,49 @@
+[09-Apr-2015 12:13:56 UTC] Default exception handler: Invalid url or port. Debug: You called www.flatedu.com:80, you should have called flatedu.com
+Error code: requirecorrectaccess
+* line 792 of /lib/setuplib.php: moodle_exception thrown
+* line 727 of /lib/setup.php: call to initialise_fullme()
+* line 26 of /config.php: call to require_once()
+* line 33 of /local/mobile/check.php: call to require_once()
+
+[09-Apr-2015 12:14:05 UTC] Default exception handler: Invalid url or port. Debug: You called www.flatedu.com:80, you should have called flatedu.com
+Error code: requirecorrectaccess
+* line 792 of /lib/setuplib.php: moodle_exception thrown
+* line 727 of /lib/setup.php: call to initialise_fullme()
+* line 26 of /config.php: call to require_once()
+* line 33 of /local/mobile/check.php: call to require_once()
+
+[09-Apr-2015 12:14:16 UTC] Default exception handler: Invalid url or port. Debug: You called www.flatedu.com:80, you should have called flatedu.com
+Error code: requirecorrectaccess
+* line 792 of /lib/setuplib.php: moodle_exception thrown
+* line 727 of /lib/setup.php: call to initialise_fullme()
+* line 26 of /config.php: call to require_once()
+* line 33 of /local/mobile/check.php: call to require_once()
+
+[11-Apr-2015 22:55:23 UTC] Default exception handler: Invalid url or port. Debug: You called www.flatedu.com:80, you should have called flatedu.com
+Error code: requirecorrectaccess
+* line 792 of /lib/setuplib.php: moodle_exception thrown
+* line 727 of /lib/setup.php: call to initialise_fullme()
+* line 26 of /config.php: call to require_once()
+* line 33 of /local/mobile/check.php: call to require_once()
+
+[11-Apr-2015 22:56:40 UTC] Default exception handler: Invalid url or port. Debug: You called www.flatedu.com:80, you should have called flatedu.com
+Error code: requirecorrectaccess
+* line 792 of /lib/setuplib.php: moodle_exception thrown
+* line 727 of /lib/setup.php: call to initialise_fullme()
+* line 26 of /config.php: call to require_once()
+* line 33 of /local/mobile/check.php: call to require_once()
+
+[11-Apr-2015 22:56:46 UTC] Default exception handler: Invalid url or port. Debug: You called www.flatedu.com:80, you should have called flatedu.com
+Error code: requirecorrectaccess
+* line 792 of /lib/setuplib.php: moodle_exception thrown
+* line 727 of /lib/setup.php: call to initialise_fullme()
+* line 26 of /config.php: call to require_once()
+* line 33 of /local/mobile/check.php: call to require_once()
+
+[11-Apr-2015 22:56:50 UTC] Default exception handler: Invalid url or port. Debug: You called www.flatedu.com:80, you should have called flatedu.com
+Error code: requirecorrectaccess
+* line 792 of /lib/setuplib.php: moodle_exception thrown
+* line 727 of /lib/setup.php: call to initialise_fullme()
+* line 26 of /config.php: call to require_once()
+* line 33 of /local/mobile/check.php: call to require_once()
+

@@ -15,34 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * External functions and service definitions.
+ * Version information
  *
  * @package    local_mobile
  * @copyright  2014 Juan Leyva <juan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$functions = array(
-	'user_create_facebook_user' => array(
-			'classname'   => 'user_custom_signup_api',
-			'methodname'  => 'user_create_facebook_user',
-			'classpath'   => 'local/user_custom_signup/externallib.php',
-			'description' => 'Create facebook user from auth token',
-			'type'        => 'write',
-	),
-);
-
-$services = array(
-   'Custom Facebook Signup/Signin Service'  => array(
-        'functions' => array (
-        	'user_create_facebook_user',
-        ),
-        'enabled' => 1,
-        'restrictedusers' => 0,
-        'shortname' => 'user_custom_signup',
-        'downloadfiles' => 1,
-        'uploadfiles' => 1
-    ),
-);
+$plugin->version   = 2014101019;            // The current plugin version (Date: YYYYMMDDXX)
+$plugin->requires  = 2014111000;            // Requires this Moodle version.
+$plugin->component = 'local_mobile';        // Full name of the plugin (used for diagnostics).
+$plugin->maturity  = MATURITY_STABLE;
+$plugin->release   = '2.8.13';

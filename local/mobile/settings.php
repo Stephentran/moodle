@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * External functions and service definitions.
+ * Plugin settings
  *
  * @package    local_mobile
  * @copyright  2014 Juan Leyva <juan@moodle.com>
@@ -24,25 +24,17 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$functions = array(
-	'user_create_facebook_user' => array(
-			'classname'   => 'user_custom_signup_api',
-			'methodname'  => 'user_create_facebook_user',
-			'classpath'   => 'local/user_custom_signup/externallib.php',
-			'description' => 'Create facebook user from auth token',
-			'type'        => 'write',
-	),
-);
+if ($hassiteconfig) {
 
-$services = array(
-   'Custom Facebook Signup/Signin Service'  => array(
-        'functions' => array (
-        	'user_create_facebook_user',
-        ),
-        'enabled' => 1,
-        'restrictedusers' => 0,
-        'shortname' => 'user_custom_signup',
-        'downloadfiles' => 1,
-        'uploadfiles' => 1
-    ),
-);
+    $settings = new admin_settingpage('local_mobile', new lang_string('pluginname', 'local_mobile'));
+    $ADMIN->add('localplugins', $settings);
+
+    $options = array(
+        1 => new lang_string('loginintheapp', 'local_mobile'),
+        2 => new lang_string('logininthebrowser', 'local_mobile')
+    );
+
+    $settings->add(new admin_setting_configselect('local_mobile/typeoflogin',
+                        get_string('local_mobiletypeoflogin_key', 'local_mobile'),
+                        get_string('local_mobiletypeoflogin', 'local_mobile'), 1, $options));
+}
