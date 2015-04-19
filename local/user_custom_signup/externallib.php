@@ -224,7 +224,9 @@ class user_custom_signup_api extends external_api {
     	if (count($tokens) > 0) {
     		$token = array_pop($tokens);
     	} else {
-    		if ( ($serviceshortname == MOODLE_OFFICIAL_MOBILE_SERVICE and has_capability('moodle/webservice:createmobiletoken', context_system::instance()))
+    		$hasperm = has_capability('moodle/webservice:createmobiletoken', context_system::instance());
+    		if ( (($serviceshortname == MOODLE_OFFICIAL_MOBILE_SERVICE or $serviceshortname == 'local_mobile') 
+    				and $hasperm)
     				//Note: automatically token generation is not available to admin (they must create a token manually)
     				or (!is_siteadmin($user) && has_capability('moodle/webservice:createtoken', context_system::instance()))) {
     					// if service doesn't exist, dml will throw exception

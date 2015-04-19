@@ -1,5 +1,6 @@
 <?php
-
+// This file is part of Moodle - http://moodle.org/
+//
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,29 +15,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service local plugin template external functions and service definitions.
+ * External functions and service definitions.
  *
- * @package    localwstemplate
- * @copyright  2011 Jerome Mouneyrac
+ * @package    local_mobile
+ * @copyright  2014 Juan Leyva <juan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// We defined the web service functions to install.
+defined('MOODLE_INTERNAL') || die;
+
 $functions = array(
-        'user_create_facebook_user' => array(
-                'classname'   => 'user_custom_signup_api',
-                'methodname'  => 'user_create_facebook_user',
-                'classpath'   => 'local/user_custom_signup/externallib.php',
-                'description' => 'Create facebook user from auth token',
-                'type'        => 'write',
-        )
+	'user_create_facebook_user' => array(
+			'classname'   => 'user_custom_signup_api',
+			'methodname'  => 'user_create_facebook_user',
+			'classpath'   => 'local/user_custom_signup/externallib.php',
+			'description' => 'Create facebook user from auth token',
+			'type'        => 'write',
+	),
 );
 
-// We define the services to install as pre-build services. A pre-build service is not editable by administrator.
 $services = array(
-        'Custom Signup Service' => array(
-                'functions' => array ('user_create_facebook_user'),
-                'restrictedusers' => 1,
-                'enabled'=>1,
+   'Custom Facebook Signup/Signin Service'  => array(
+        'functions' => array (
+        	'user_create_facebook_user',
         ),
+        'enabled' => 1,
+        'restrictedusers' => 0,
+        'shortname' => 'user_custom_signup',
+        'downloadfiles' => 1,
+        'uploadfiles' => 1
+    ),
 );

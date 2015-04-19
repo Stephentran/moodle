@@ -111,6 +111,7 @@ $services = array(
             'local_mobile_core_user_remove_user_device',
             'mod_assign_get_assignments',
             'mod_assign_get_submissions',
+        	'core_user_create_users',
         ),
         'enabled' => 0,
         'restrictedusers' => 0,
