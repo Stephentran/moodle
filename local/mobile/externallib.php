@@ -628,7 +628,7 @@ class local_mobile_external extends external_api {
     	
     	return new external_function_parameters(
     			array(
-    					'categoryid'       => new external_value(PARAM_INT, 'ID of Category'),
+    					'categoryid'       => new external_value(PARAM_INT, 'ID of Category', VALUE_REQUIRED),
     			)
     	);
     }
@@ -646,7 +646,7 @@ class local_mobile_external extends external_api {
     	$params = self::validate_parameters(self::course_get_courses_by_category_parameters(),
     			array('categoryid' => $categoryid));
     	
-    	$courses = $DB->get_records_list('course', 'category', $categoryid);
+    	$courses = $DB->get_records_list('course', 'category', array( $categoryid ));
     	
     	//create return value
     	$coursesinfo = array();
@@ -789,6 +789,190 @@ class local_mobile_external extends external_api {
     							),
     					), 'course'
     			)
+    	);
+    }
+	
+	// SEARCH COURSES
+	/**
+     * Returns description of method parameters.
+     *
+     * @return external_description
+     * @since Moodle 2.9
+     */
+    public static function course_search_courses_parameters() {
+    	global $CFG;
+    	
+    	return new external_function_parameters(
+    			array(
+    					'keyword'       => new external_value(PARAM_TEXT, 'KEYWORD', VALUE_REQUIRED),
+    			)
+    	);
+    }
+    
+    /**
+     * 
+     */
+    public static function course_search_courses($keyword) {
+    	
+    	global $CFG, $DB;
+    	require_once($CFG->dirroot . "/course/lib.php");
+    	require_once($CFG->libdir. '/coursecatlib.php');
+    	
+    	//validate parameter
+    	$params = self::validate_parameters(self::course_search_courses_parameters(),
+    			array('keyword' => $keyword));
+    	
+		// search head
+    	// $courses = $DB->get_records_list('course', 'category', array( $categoryid ));
+		$searchcriteria = array( 'search' => $keyword );
+		$displayoptions = array(
+            'recursive' => true,
+            'sort' => array('fullname' => 1)
+		);
+
+		$courses = coursecat::search_courses($searchcriteria, $displayoptions);
+    	
+    	//create return value
+    	$coursesinfo = array();
+    	foreach ($courses as $course) {
+    	
+    		// now security checks
+    		$context = context_course::instance($course->id, IGNORE_MISSING);
+    		$courseformatoptions = course_get_format($course)->get_format_options();
+    		try {
+    			self::validate_context($context);
+    		} catch (Exception $e) {
+    			$exceptionparam = new stdClass();
+    			$exceptionparam->message = $e->getMessage();
+    			$exceptionparam->courseid = $course->id;
+    			throw new moodle_exception('errorcoursecontextnotvalid', 'webservice', '', $exceptionparam);
+    		}
+    		require_capability('moodle/course:view', $context);
+    	
+    		$courseinfo = array();
+    		$courseinfo['id'] = $course->id;
+    		$courseinfo['fullname'] = $course->fullname;
+    		$courseinfo['shortname'] = $course->shortname;
+    		$courseinfo['categoryid'] = $course->category;
+    		list($courseinfo['summary'], $courseinfo['summaryformat']) =
+    		external_format_text($course->summary, $course->summaryformat, $context->id, 'course', 'summary', 0);
+    		$courseinfo['format'] = $course->format;
+    		$courseinfo['startdate'] = $course->startdate;
+    		if (array_key_exists('numsections', $courseformatoptions)) {
+    			// For backward-compartibility
+    			$courseinfo['numsections'] = $courseformatoptions['numsections'];
+    		}
+    	
+    		//some field should be returned only if the user has update permission
+    		$courseadmin = has_capability('moodle/course:update', $context);
+    		if ($courseadmin) {
+    			$courseinfo['categorysortorder'] = $course->sortorder;
+    			$courseinfo['idnumber'] = $course->idnumber;
+    			$courseinfo['showgrades'] = $course->showgrades;
+    			$courseinfo['showreports'] = $course->showreports;
+    			$courseinfo['newsitems'] = $course->newsitems;
+    			$courseinfo['visible'] = $course->visible;
+    			$courseinfo['maxbytes'] = $course->maxbytes;
+    			if (array_key_exists('hiddensections', $courseformatoptions)) {
+    				// For backward-compartibility
+    				$courseinfo['hiddensections'] = $courseformatoptions['hiddensections'];
+    			}
+    			$courseinfo['groupmode'] = $course->groupmode;
+    			$courseinfo['groupmodeforce'] = $course->groupmodeforce;
+    			$courseinfo['defaultgroupingid'] = $course->defaultgroupingid;
+    			$courseinfo['lang'] = $course->lang;
+    			$courseinfo['timecreated'] = $course->timecreated;
+    			$courseinfo['timemodified'] = $course->timemodified;
+    			$courseinfo['forcetheme'] = $course->theme;
+    			$courseinfo['enablecompletion'] = $course->enablecompletion;
+    			$courseinfo['completionnotify'] = $course->completionnotify;
+    			$courseinfo['courseformatoptions'] = array();
+    			foreach ($courseformatoptions as $key => $value) {
+    				$courseinfo['courseformatoptions'][] = array(
+    						'name' => $key,
+    						'value' => $value
+    				);
+    			}
+    		}
+    	
+    		if ($courseadmin or $course->visible
+    				or has_capability('moodle/course:viewhiddencourses', $context)) {
+    					$coursesinfo[] = $courseinfo;
+    		}
+    	}
+    	
+    	return $coursesinfo;
+    }
+    
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_description
+     * @since Moodle 2.9
+     */
+    public static function course_search_courses_returns() {
+    	return new external_multiple_structure(
+			new external_single_structure(
+				array(
+					'id' => new external_value(PARAM_INT, 'course id'),
+					'shortname' => new external_value(PARAM_TEXT, 'course short name'),
+					'categoryid' => new external_value(PARAM_INT, 'category id'),
+					'categorysortorder' => new external_value(PARAM_INT,
+							'sort order into the category', VALUE_OPTIONAL),
+					'fullname' => new external_value(PARAM_TEXT, 'full name'),
+					'idnumber' => new external_value(PARAM_RAW, 'id number', VALUE_OPTIONAL),
+					'summary' => new external_value(PARAM_RAW, 'summary'),
+					'summaryformat' => new external_format_value('summary'),
+					'format' => new external_value(PARAM_PLUGIN,
+							'course format: weeks, topics, social, site,..'),
+					'showgrades' => new external_value(PARAM_INT,
+							'1 if grades are shown, otherwise 0', VALUE_OPTIONAL),
+					'newsitems' => new external_value(PARAM_INT,
+							'number of recent items appearing on the course page', VALUE_OPTIONAL),
+					'startdate' => new external_value(PARAM_INT,
+							'timestamp when the course start'),
+					'numsections' => new external_value(PARAM_INT,
+							'(deprecated, use courseformatoptions) number of weeks/topics',
+							VALUE_OPTIONAL),
+					'maxbytes' => new external_value(PARAM_INT,
+							'largest size of file that can be uploaded into the course',
+							VALUE_OPTIONAL),
+					'showreports' => new external_value(PARAM_INT,
+							'are activity report shown (yes = 1, no =0)', VALUE_OPTIONAL),
+					'visible' => new external_value(PARAM_INT,
+							'1: available to student, 0:not available', VALUE_OPTIONAL),
+					'hiddensections' => new external_value(PARAM_INT,
+							'(deprecated, use courseformatoptions) How the hidden sections in the course are displayed to students',
+							VALUE_OPTIONAL),
+					'groupmode' => new external_value(PARAM_INT, 'no group, separate, visible',
+							VALUE_OPTIONAL),
+					'groupmodeforce' => new external_value(PARAM_INT, '1: yes, 0: no',
+							VALUE_OPTIONAL),
+					'defaultgroupingid' => new external_value(PARAM_INT, 'default grouping id',
+							VALUE_OPTIONAL),
+					'timecreated' => new external_value(PARAM_INT,
+							'timestamp when the course have been created', VALUE_OPTIONAL),
+					'timemodified' => new external_value(PARAM_INT,
+							'timestamp when the course have been modified', VALUE_OPTIONAL),
+					'enablecompletion' => new external_value(PARAM_INT,
+							'Enabled, control via completion and activity settings. Disbaled,
+							not shown in activity settings.',
+							VALUE_OPTIONAL),
+					'completionnotify' => new external_value(PARAM_INT,
+							'1: yes 0: no', VALUE_OPTIONAL),
+					'lang' => new external_value(PARAM_SAFEDIR,
+							'forced course language', VALUE_OPTIONAL),
+					'forcetheme' => new external_value(PARAM_PLUGIN,
+							'name of the force theme', VALUE_OPTIONAL),
+					'courseformatoptions' => new external_multiple_structure(
+							new external_single_structure(
+									array('name' => new external_value(PARAM_ALPHANUMEXT, 'course format option name'),
+											'value' => new external_value(PARAM_RAW, 'course format option value')
+									)),
+							'additional options for particular course format', VALUE_OPTIONAL
+					),
+				), 'course'
+			)
     	);
     }
 }

@@ -73,7 +73,14 @@ $functions = array(
 		'type'        => 'read',
 		'capabilities'=> 'moodle/course:view',
 	),
-	
+	'local_mobile_course_search_courses' => array(
+		'classname'   => 'local_mobile_external',
+		'methodname'  => 'course_search_courses',
+		'classpath'   => 'local/mobile/externallib.php',
+		'description' => 'Returns all courses by given category id.',
+		'type'        => 'read',
+		'capabilities'=> 'moodle/course:view',
+	),
 );
 
 $services = array(
@@ -119,9 +126,11 @@ $services = array(
             'local_mobile_core_group_get_course_user_groups',
             'local_mobile_core_user_remove_user_device',
         	'local_mobile_course_get_courses_by_category',
+			'local_mobile_course_search_courses',
             'mod_assign_get_assignments',
             'mod_assign_get_submissions',
         	'core_user_create_users',
+			'core_user_get_users_by_field',
         ),
         'enabled' => 0,
         'restrictedusers' => 0,
